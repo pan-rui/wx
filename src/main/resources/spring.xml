@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:c='http://www.springframework.org/schema/c'
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/cache
+    http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-autowire="byName">
+
+    <!-- 引入属性文件 -->
+    <!--<context:property-placeholder location="classpath:config.properties"/>-->
+    <util:properties id="config" location="classpath:config.properties"/>
+    <!-- 自动扫描(自动注入) -->
+    <!--<context:component-scan base-package="com.ygo" scoped-proxy="interfaces"/>-->
+    <context:component-scan base-package="com.pc.wx">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:annotation-config/>
+
+    <!--    <aop:config>
+            <aop:aspect ref="logService">
+                <aop:pointcut id="logServicePointcuts"
+                              expression="execution(* com.hehenian.biz.service..*.*(..))" />
+                <aop:around pointcut-ref="logServicePointcuts" method="around" />
+            </aop:aspect>
+        </aop:config>-->
+    <aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true"/>
+    <task:annotation-driven exception-handler="asyncExceptionHandler" proxy-target-class="true" />
+
+    <!--
+        <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+            <property name="basenames">
+                <list>
+                    &lt;!&ndash; 在web环境中一定要定位到classpath 否则默认到当前web应用下找  &ndash;&gt;
+                    <value>message</value>
+                    <value>org/hibernate/validator/ValidationMessages</value>
+                </list>
+            </property>
+
+            <property name="useCodeAsDefaultMessage" value="false"/>
+            <property name="defaultEncoding" value="UTF-8"/>
+            <property name="cacheSeconds" value="86400"/>
+            <property name="commonMessages" value="messages"/>
+        </bean>
+    -->
+    <!-- 导入ehcache的配置文件 -->
+    <!--<import resource="spring-ehcache.xml"/>-->
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <!-- =================Spring data REDIS configuration =============================== -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="50"></property>
+        <property name="maxIdle" value="6"></property>
+        <property name="maxWaitMillis" value="15000"></property>
+        <property name="minEvictableIdleTimeMillis" value="300000"></property>
+        <property name="numTestsPerEvictionRun" value="3"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"></property>
+    </bean>
+
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool" c:poolConfig-ref="jedisPoolConfig"
+          c:host="#{config['jedis.host']}" c:password="#{config['jedis.pwd']}" c:port="6379" c:timeout="15000"/>
+</beans>
