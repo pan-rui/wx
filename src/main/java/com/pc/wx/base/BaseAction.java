@@ -4,9 +4,12 @@ import com.pc.wx.po.BaseResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
 
@@ -78,10 +81,26 @@ public class BaseAction implements ServletContextAware {
         return "";
     }
 
+    public byte[] getRequestPostBytes(HttpServletRequest request)
+            throws IOException {
+        int contentLength = request.getContentLength();
+        byte buffer[] = new byte[contentLength];
+        for (int i = 0; i < contentLength; ) {
+            int readlen = request.getInputStream().read(buffer, i, contentLength - i);
+            if (readlen == -1) {
+                break;
+            }
+            i += readlen;
+        }
+        return buffer;
+    }
 
-/*    @ModelAttribute("baseUrl")
+    @ModelAttribute("tenantId")
     public String setConstans(HttpServletRequest request,ModelMap model){
-
-        return request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
-    }*/
+        String ddBB=request.getHeader("ddBB");
+        model.addAttribute("ddBB", StringUtils.isEmpty(ddBB) ? "dems": ddBB);
+        System.out.println("请求路径===>"+request.getRequestURI()+"\r\n请求参数====>");
+        request.getParameterMap().forEach((k,v)-> System.out.println(k+"=====>"+v[0]));
+        return request.getHeader("TENANT_ID");
+    }
 }

@@ -24,7 +24,7 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     <context:annotation-config/>
-
+    <bean id="wxBizMsgCrypt" class="com.pc.wx.aes.WxBizMsgCrypt" c:encodingAesKey="#{config['EncodingAESKey']}" c:appId="#{config['appId']}" c:token="#{config['token']}"/>
     <!--    <aop:config>
             <aop:aspect ref="logService">
                 <aop:pointcut id="logServicePointcuts"

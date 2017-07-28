@@ -85,12 +85,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springfr
         </property>
     </bean> -->
 
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/view/"/>
-        <property name="suffix" value=".html"/>
-        <property name="contentType" value="text/html; charset=utf-8"/>
-        <property name="exposePathVariables" value="false"/>
-    </bean>
+
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 <!--        <property name="mediaTypes">
@@ -102,6 +97,16 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springfr
 <!--        <property name="defaultContentType" value="text/html"/>
         <property name="ignoreAcceptHeader" value="true"/>
         <property name="favorPathExtension" value="true"/>-->
+        <property name="viewResolvers">
+            <list>
+                <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix" value="/view/"/>
+                    <property name="suffix" value=".html"/>
+                    <property name="contentType" value="text/html; charset=utf-8"/>
+                    <property name="exposePathVariables" value="false"/>
+                </bean>
+            </list>
+        </property>
         <property name="defaultViews">
             <list>
                 <bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView"/>

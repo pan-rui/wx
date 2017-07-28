@@ -1,5 +1,6 @@
 package com.pc.wx.http;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -32,8 +33,27 @@ public class CacheUtil {
     }
 
     public void setCacheOnExpire(String key, String val,int expire) {
+        if(StringUtils.isEmpty(val)) return;
         Jedis jedis = jedisPool.getResource();
         jedis.setex(key,expire, val);
         jedis.close();
+    }
+    public void delCache(String key) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.del(key);
+        jedis.close();
+    }
+
+    public void hSetCache(String field,String key,String value) {
+        if(StringUtils.isEmpty(value)) return;
+        Jedis jedis = jedisPool.getResource();
+        jedis.hset(field, key, value);
+        jedis.close();
+    }
+    public String hGetCache(String field,String key) {
+        Jedis jedis = jedisPool.getResource();
+        String val=jedis.hget(field, key);
+        jedis.close();
+        return val;
     }
 }

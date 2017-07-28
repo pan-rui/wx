@@ -1,5 +1,8 @@
 package com.pc.wx.http;
 
+import com.alibaba.fastjson.JSON;
+import com.pc.wx.po.ParamsMap;
+import com.pc.wx.po.Protocol;
 import com.pc.wx.po.WxProtocol;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -8,12 +11,14 @@ import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -22,13 +27,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.apache.http.util.EntityUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import org.springframework.http.HttpMethod;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.ConnectException;
@@ -130,17 +135,28 @@ public class HttpUtil {
         return ssl ? builder.setSSLSocketFactory(ssf).build() : builder.build();
     }
 
-    public static String execute(WxProtocol wxProtocol, final Map<String, Object> params) {
+    public static String execute(Protocol protocol, final Map<String, Object> params) {
         String resultData = "";
         try {
-            String url = genGetURL(wxProtocol.getUrl(), params);
+            String url = genGetURL(protocol.getUrl(), params);
             HttpUriRequest request = new HttpGet(url);
-            if (wxProtocol.getPostParams() != null) {
+            String contentType=protocol.getContentType();
+            if (protocol.getMethod()== HttpMethod.POST||!org.springframework.util.CollectionUtils.isEmpty(protocol.getPostParams())) {
                 request = new HttpPost(url);
-                List<NameValuePair> nameValuePairs = new ArrayList<>();
-                params.forEach((k, v) -> nameValuePairs.add(new BasicNameValuePair(k, v.toString())));
-                ((HttpPost) request).setEntity(EntityBuilder.create().setParameters(nameValuePairs).setContentEncoding("UTF-8").build());
+                if(contentType.equals(Protocol.TEXT)||contentType.equals(Protocol.FORM)) {
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    params.forEach((k, v) -> nameValuePairs.add(new BasicNameValuePair(k, v.toString())));
+                    ((HttpPost) request).setEntity(EntityBuilder.create().setContentEncoding("UTF-8").setParameters(nameValuePairs).build());
+                }else if(contentType.equals(Protocol.JSON)) {
+                    ((HttpPost) request).setEntity(new StringEntity(JSON.toJSONString(ParamsMap.newMap("params",params)),"UTF-8"));
+                }else if(contentType.equals(Protocol.BYTE)){
+                    ((HttpPost)request).setEntity(EntityBuilder.create().setBinary((byte[]) params.get("byte")).build());
+                } else if (contentType.equals(Protocol.MULTI)) {
+                    File file = (File) params.get("file");
+                    ((HttpPost)request).setEntity(MultipartEntityBuilder.create().addBinaryBody("file",file, ContentType.APPLICATION_OCTET_STREAM,file.getName()).build());
+                }
             }
+                request.setHeader("Content-Type",contentType);
             HttpEntity entity = getHttpClient(url.startsWith("https")).execute(request).getEntity();
 //            if (convertType.equalsIgnoreCase("string"))//传输类型
             resultData = EntityUtils.toString(entity, "UTF-8");
@@ -170,7 +186,7 @@ public class HttpUtil {
         while (matcher.find()) {
             String k = matcher.group(1);
 //            String v = matcher.group(2);
-            String n = params.get(k).toString();
+            String n = params.remove(k).toString();
             if (StringUtils.isNotEmpty(n))
                 matcher.appendReplacement(sb, "$1=" + n);
         }
