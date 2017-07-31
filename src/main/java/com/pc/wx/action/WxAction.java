@@ -70,7 +70,7 @@ public class WxAction extends BaseAction {
 
     @RequestMapping(value = "userInfo", method = RequestMethod.GET)
     @ResponseBody
-    public Map getUserInfo(String state, String openId, String tenantId, String ddBB) {
+    public Map getUserInfo(String state, @RequestParam(required = true) String openId, String tenantId, String ddBB) {
         Map<String, Object> userMap = null;
         if (StringUtils.isEmpty(openId))
             openId = cacheUtil.getCache(state);
@@ -128,7 +128,7 @@ public class WxAction extends BaseAction {
 
     @RequestMapping(value = "extInfo",method = RequestMethod.GET)
     @ResponseBody
-    public Object extInfo(HttpServletRequest request, String openId) {
+    public Object extInfo(HttpServletRequest request, @RequestParam(required = true) String openId) {
         return remoteService.extInfo(openId);
     }
 
@@ -141,5 +141,10 @@ public class WxAction extends BaseAction {
     @ResponseBody
     public Object getCheckWork(HttpServletRequest request, String tenantId, String ddBB, @RequestParam(required = true) String openId, String projectCode, String month) {
         return remoteService.getCheckWork(openId, tenantId, ddBB, projectCode, month);
+    }
+    @RequestMapping(value = "salary", method = RequestMethod.GET)
+    @ResponseBody
+    public Object getSalary(HttpServletRequest request, String tenantId, String ddBB, @RequestParam(required = true) String openId, String projectCode) {
+        return remoteService.getSalary(openId, tenantId, ddBB, projectCode);
     }
 }
