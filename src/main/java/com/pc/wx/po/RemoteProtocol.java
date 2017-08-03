@@ -21,6 +21,7 @@ public enum RemoteProtocol implements Protocol{
 //    ,ADDWXUSER("http://116.7.226.222:10001/weChat/addWxUser",JSON,HttpMethod.POST,ParamsMap.newMap("openId","").addParams("userInfo","").addParams("tenantId",""))
     ,CHECKWORK("http://116.7.226.222:10001/weChat/getCheckWork",FORM,HttpMethod.POST,ParamsMap.newMap("openId","").addParams("ddBB","").addParams("tenantId","").addParams("month","").addParams("projectCode",""))
     ,GETSALARY("http://116.7.226.222:10001/weChat/getSalary",FORM,HttpMethod.POST,ParamsMap.newMap("openId","").addParams("ddBB","").addParams("tenantId","").addParams("projectCode",""))
+    ,DOWNIMG("http://116.7.226.222:10001/weChat/downImg",FORM,HttpMethod.POST,ParamsMap.newMap("openId","").addParams("ddBB","").addParams("tenantId","").addParams("projectCode","").addParams("serverId","").addParams("isFront","").addParams("accToken",""))
 
     ;
     private String url;

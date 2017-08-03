@@ -9,6 +9,7 @@ import com.pc.wx.po.ParamsMap;
 import com.pc.wx.service.RemoteService;
 import com.pc.wx.service.WxService;
 import com.pc.wx.vo.VO;
+import com.sun.xml.internal.rngom.parse.host.Base;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -74,11 +75,14 @@ public class WxAction extends BaseAction {
         Map<String, Object> userMap = null;
         if (StringUtils.isEmpty(openId))
             openId = cacheUtil.getCache(state);
+        if (StringUtils.isEmpty(openId)) {
+            return ParamsMap.newMap("code", 10).addParams("msg", "openId为空,请重新授权!");
+        }
         String userStr = cacheUtil.hGetCache("USERINFO", openId);
         if (StringUtils.isEmpty(userStr))
             userMap = remoteService.getUserInfo(ddBB, openId, tenantId);
         else {
-            userMap = JSON.parseObject(userStr, Map.class);
+            userMap =ParamsMap.newMap("code",0).addParams("data",JSON.parseObject(userStr, Map.class));
         }
         return userMap;
     }
@@ -132,11 +136,6 @@ public class WxAction extends BaseAction {
         return remoteService.extInfo(openId);
     }
 
-    public Map getCardImg(HttpServletRequest request, String openId, String media) {
-        System.out.println("openId=====>"+openId+"          =========media"+media);
-        return wxService.downImg(openId, media);
-    }
-
     @RequestMapping(value = "checkWork", method = RequestMethod.GET)
     @ResponseBody
     public Object getCheckWork(HttpServletRequest request, String tenantId, String ddBB, @RequestParam(required = true) String openId, String projectCode, String month) {
@@ -147,4 +146,11 @@ public class WxAction extends BaseAction {
     public Object getSalary(HttpServletRequest request, String tenantId, String ddBB, @RequestParam(required = true) String openId, String projectCode) {
         return remoteService.getSalary(openId, tenantId, ddBB, projectCode);
     }
+
+    @RequestMapping(value = "mediaId",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getServerId(HttpServletRequest request, @RequestParam(required = true) String openId, String tenantId, String projectCode, String ddBB, @RequestParam(required = true) String serverId,@RequestParam(required = true) int isFront) {
+        return remoteService.downImg(openId, tenantId, ddBB, projectCode, serverId, isFront, wxService.getToken());
+    }
+
 }

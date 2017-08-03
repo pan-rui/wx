@@ -49,4 +49,8 @@ public class RemoteService {
     }
     public Map getSalary(String openId, String tenantId, String ddBB, String projectCode) {
         return JSON.parseObject(HttpUtil.execute(RemoteProtocol.GETSALARY, ParamsMap.newMap("openId", openId).addParams("tenantId", tenantId).addParams("ddBB", ddBB).addParams("projectCode", projectCode)));  }
+
+    public Map downImg(String openId, String tenantId, String ddBB, String projectCode,String serverId,int isFront,String accToken) {
+        return JSON.parseObject(HttpUtil.execute(RemoteProtocol.DOWNIMG, ParamsMap.newMap("openId", openId).addParams("tenantId", tenantId).addParams("ddBB", ddBB).addParams("projectCode", projectCode).addParams("serverId",serverId).addParams("accToken",accToken).addParams("isFront",isFront)));
+    }
 }

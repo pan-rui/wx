@@ -20,7 +20,7 @@ public enum WxProtocol implements Protocol {
     ,CREATE_MENU("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN",JSON,HttpMethod.POST)
     ,JSTICKET("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi",FORM,HttpMethod.GET)
     ,GETUSER("https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN",FORM,HttpMethod.GET)
-    ,DOWNIMG("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID",JSON,HttpMethod.GET)
+    ,DOWNIMG("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID",BYTE,HttpMethod.GET)
     ;
     private String url;
     private String contentType;
