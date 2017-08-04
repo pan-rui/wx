@@ -1,17 +1,15 @@
 package com.pc.wx.action;
 
-import com.alibaba.fastjson.JSON;
 import com.pc.wx.base.BaseAction;
 import com.pc.wx.http.CacheUtil;
-import com.pc.wx.http.HttpUtil;
 import com.pc.wx.po.BaseResult;
 import com.pc.wx.po.ParamsMap;
 import com.pc.wx.service.RemoteService;
 import com.pc.wx.service.WxService;
 import com.pc.wx.vo.VO;
-import com.sun.xml.internal.rngom.parse.host.Base;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,12 +76,12 @@ public class WxAction extends BaseAction {
         if (StringUtils.isEmpty(openId)) {
             return ParamsMap.newMap("code", 10).addParams("msg", "openId为空,请重新授权!");
         }
-        String userStr = cacheUtil.hGetCache("USERINFO", openId);
-        if (StringUtils.isEmpty(userStr))
+//        String userStr = cacheUtil.hGetCache("USERINFO", openId);
+//        if (StringUtils.isEmpty(userStr))
             userMap = remoteService.getUserInfo(ddBB, openId, tenantId);
-        else {
+/*        else {
             userMap =ParamsMap.newMap("code",0).addParams("data",JSON.parseObject(userStr, Map.class));
-        }
+        }*/
         return userMap;
     }
 
@@ -114,7 +112,9 @@ public class WxAction extends BaseAction {
             return new BaseResult(102,"验证码已过期!");
         }else if(smsCode.equals(phoneCode)){
             //远程验证是否存在
-            Map<String,Object> resultMap= remoteService.validAndUser(phone, pCode, openId,wxService.getWxUser(openId));
+            Map<String,Object> wxUser=wxService.getWxUser(openId);
+            if(CollectionUtils.isEmpty(wxUser)) return new BaseResult(80, "请重新进行授权!");
+            Map<String,Object> resultMap= remoteService.validAndUser(phone, pCode, openId,wxUser);
 //            resultMap.get()
 //            return ParamsMap.newMap("code", 0).addParams("msg", "OK");
                 return new BaseResult((Integer) resultMap.get("code"),wxService.getHeadForOid(openId));
@@ -122,13 +122,6 @@ public class WxAction extends BaseAction {
             return new BaseResult(101,"验证码错误!");
         }
     }
-
-/*    @RequestMapping(value = "imgCode", method = RequestMethod.GET)
-    @ResponseBody
-    public Object imageCode(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        ImageCode.generatorImg(request, response);
-        return null;
-    }*/
 
     @RequestMapping(value = "extInfo",method = RequestMethod.GET)
     @ResponseBody

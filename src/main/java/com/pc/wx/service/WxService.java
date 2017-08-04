@@ -81,7 +81,7 @@ public class WxService {
                 if(!StringUtils.isEmpty(refToken)) {
                     Map<String,Object> refTokenMap = JSON.parseObject(HttpUtil.execute(WxProtocol.REFRESH_TOKEN, ParamsMap.newMap("appid", appId).addParams("grant_type", "refresh_token").addParams("refresh_token", refToken)));
                         System.out.println("===>"+refTokenMap);
-                    if(refTokenMap.get("errCode").equals("0")) {
+                    if(!refTokenMap.containsKey("errCode")) {
                         token = (String) refTokenMap.get("access_token");
                         cacheUtil.setCacheOnExpire((String) refTokenMap.get("openid"), token, Integer.parseInt(refTokenMap.get("expires_in").toString()) - 30);
                         cacheUtil.setCacheOnExpire((String) refTokenMap.get("openid") + "_up", (String) refTokenMap.get("refresh_token"), 3600 * 24 * 30 - 30);
@@ -89,6 +89,7 @@ public class WxService {
                 }else isQuery=true;
             }
         }
+/*
         if (isQuery) {
             try {
                 String atStr = HttpUtil.execute(WxProtocol.CODE, ParamsMap.newMap("appid", appId).addParams("redirect_uri", URLEncoder.encode(redirect_uri, "UTF-8")).addParams("response_type", response_type).addParams("scope", scope).addParams("state", "234567"));
@@ -106,6 +107,7 @@ public class WxService {
                 e.printStackTrace();
             }
         }
+*/
         return token;
     }
 
@@ -126,7 +128,7 @@ public class WxService {
         if((int)resultMap.get("code") !=0)
             return tokenMap;
         else{
-            cacheUtil.hSetCache("USERINFO",openid,JSON.toJSONString(resultMap.get("data")));
+//            cacheUtil.hSetCache("USERINFO",openid,JSON.toJSONString(resultMap.get("data")));
             return resultMap;
         }
     }
@@ -179,7 +181,9 @@ public class WxService {
     public Map<String, Object> getWxUser(String openId) {
         Map<String,Object> wxUser= new LinkedHashMap();
         try {
-            wxUser = JSON.parseObject(new String(HttpUtil.execute(WxProtocol.GETUSER, ParamsMap.newMap("access_token",getToken()).addParams("openid",openId).addParams("lang","zh_CN")).getBytes("ISO-8859-1"),"UTF-8"),Map.class);
+            String accToken=reqToken(openId);
+            if(StringUtils.isEmpty(accToken)) return null;
+            wxUser = JSON.parseObject(new String(HttpUtil.execute(WxProtocol.GETUSER, ParamsMap.newMap("access_token",accToken).addParams("openid",openId).addParams("lang","zh_CN")).getBytes("ISO-8859-1"),"UTF-8"),Map.class);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
