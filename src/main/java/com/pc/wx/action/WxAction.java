@@ -96,7 +96,7 @@ public class WxAction extends BaseAction {
     @RequestMapping(value = "sendSMS", method = RequestMethod.GET)
     @ResponseBody
     public WebAsyncTask<String> sendSMS(HttpSession session, String phone, String type) {
-        return new WebAsyncTask<String>(3500l, () -> {
+        return new WebAsyncTask<String>(3500L, () -> {
             String smsCode = "12345678";
             System.out.println("获取短信..........============"+type);
             cacheUtil.setCacheOnExpire("phone_" + type, smsCode, 1800);

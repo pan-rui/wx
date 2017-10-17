@@ -3,7 +3,6 @@ package com.pc.wx.action;
 import com.alibaba.fastjson.JSON;
 import com.pc.wx.aes.AesException;
 import com.pc.wx.aes.SHA1;
-import com.pc.wx.aes.WxBizMsgCrypt;
 import com.pc.wx.base.BaseAction;
 import com.pc.wx.http.CacheUtil;
 import com.pc.wx.http.HttpUtil;
@@ -24,7 +23,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -77,14 +75,17 @@ public class VerifyAction extends BaseAction {
     @RequestMapping(value = "auth")
     @ResponseBody
     public Map call(HttpServletRequest request, HttpServletResponse response,String code, final String state) {
-        if (StringUtils.isEmpty(code)) return ParamsMap.newMap("301", "后端异常!");
+        if (StringUtils.isEmpty(code)) {
+            return ParamsMap.newMap("301", "后端异常!");
+        }
         String[] params = state.split("\\$");
         Map resultMap=wxService.respToken(code,params[0] );
         try {
-            if(resultMap.containsKey("data"))
+            if(resultMap.containsKey("data")) {
                 response.sendRedirect(params[1]);
-            else
-            response.sendRedirect("/weChat/login.html");
+            }else {
+                response.sendRedirect("/weChat/login.html");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

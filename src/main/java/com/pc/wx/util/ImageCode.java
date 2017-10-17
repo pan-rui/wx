@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Random;
 
 //@WebServlet(urlPatterns = "/servlet/ImageCode",name ="ImageCode" )
@@ -60,7 +59,7 @@ public class ImageCode {
     public static void generatorImg(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
 //            System.out.println(request.getParameter("time"));
-        request.getSession(true).setAttribute("imgTime", new Date().getTime());
+        request.getSession(true).setAttribute("imgTime", System.currentTimeMillis());
         response.setContentType("image/jpeg; charset=GBK");
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");

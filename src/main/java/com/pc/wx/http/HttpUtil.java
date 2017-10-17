@@ -3,7 +3,6 @@ package com.pc.wx.http;
 import com.alibaba.fastjson.JSON;
 import com.pc.wx.po.ParamsMap;
 import com.pc.wx.po.Protocol;
-import com.pc.wx.po.WxProtocol;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -11,6 +10,7 @@ import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -146,7 +146,7 @@ public class HttpUtil {
                 if(contentType.equals(Protocol.TEXT)||contentType.equals(Protocol.FORM)) {
                     List<NameValuePair> nameValuePairs = new ArrayList<>();
                     params.forEach((k, v) -> nameValuePairs.add(new BasicNameValuePair(k, v.toString())));
-                    ((HttpPost) request).setEntity(EntityBuilder.create().setContentEncoding("UTF-8").setParameters(nameValuePairs).build());
+                    ((HttpPost) request).setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
                 }else if(contentType.equals(Protocol.JSON)) {
                     ((HttpPost) request).setEntity(new StringEntity(JSON.toJSONString(ParamsMap.newMap("params",params)),"UTF-8"));
                 }else if(contentType.equals(Protocol.BYTE)){

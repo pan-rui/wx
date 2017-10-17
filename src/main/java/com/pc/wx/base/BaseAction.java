@@ -99,7 +99,7 @@ public class BaseAction implements ServletContextAware {
     public String setConstans(HttpServletRequest request,ModelMap model){
         String ddBB=request.getHeader("ddBB");
         model.addAttribute("ddBB", StringUtils.isEmpty(ddBB) ? "dems": ddBB);
-        System.out.println("请求路径===>"+request.getRequestURI()+"\r\n请求参数====>");
+        logger.info("请求路径===>"+request.getRequestURI()+"\r\n请求参数====>");
         request.getParameterMap().forEach((k,v)-> System.out.println(k+"=====>"+v[0]));
         return request.getHeader("TENANT_ID");
     }

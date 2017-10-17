@@ -1,6 +1,5 @@
 package com.pc.wx.po;
 
-import com.pc.wx.http.HttpUtil;
 import org.springframework.http.HttpMethod;
 
 import java.util.Map;

@@ -61,13 +61,13 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springfr
         </mvc:async-support>
     </mvc:annotation-driven>
 
-<!--    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
           p:defaultEncoding="UTF-8">
-        &lt;!&ndash;<property name="defaultEncoding" value="utf-8"></property>&ndash;&gt;
-        &lt;!&ndash; 最大上传大小100M &ndash;&gt;
+        <!--<property name="defaultEncoding" value="utf-8"></property>-->
+        <!-- 最大上传大小100M -->
         <property name="maxUploadSize" value="#{config['maxUploadSize']}"></property>
         <property name="maxInMemorySize" value="#{config['maxInMemorySize']}"></property>
-    </bean>-->
+    </bean>
 
     <!-- 定时往socketio里面发送信息
     <bean id="timerTaskService" class="com.cmb.appversion.controller.SocketIOTimeTask"></bean>

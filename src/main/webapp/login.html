@@ -7,4 +7,22 @@
 <body>
 Hello lOgin
 </body>
+<script>
+    var dd = {
+        "code": 0,
+        "data": [{
+            "topic": "添加一条用户数据,包含name(String),phone(Long),sex(0 或1)，time(Long)，要求以POST方式请求，JSON格式传递数据(示例：{params:{name:xx,phone:xx,sex:xx,time:xx}})，并将成功后返回的data数据显示到页面上",
+            "url": "http://www.l-iot.cn/wx/t1/你电话"
+        }, {
+            "topic": "修改刚才添加的那条数据，以id为条件，将time字段格式化成'yyyy-MM-dd HH:mm:ss'的形式，要求以PUT方式请求，JSON格式传递数据({params:{数据}})，并将成功后返回的data数据显示到页面上",
+            "url": "http://www.l-iot.cn/wx/t2/你电话"
+        }, {
+            "topic": "删除刚才添加的那条数据，以id为条件，要求以DELETE方式请求，form表单传递数据，并将成功后返回的data数据显示到页面上",
+            "url": "http://www.l-iot.cn/wx/t3/你电话"
+        }, {
+            "topic": "上传一张图片,并带上文件类型，图片字段为img,文件类型为fType,要求以POST方式请求，格式传递数据，并将成功后返回的l图片url打印到页面上",
+            "url": "http://www.l-iot.cn/wx/t4/你电话"
+        }]
+    }
+</script>
 </html>

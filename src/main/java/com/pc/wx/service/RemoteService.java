@@ -2,7 +2,6 @@ package com.pc.wx.service;
 
 import com.alibaba.fastjson.JSON;
 import com.pc.wx.http.HttpUtil;
-import com.pc.wx.po.BaseResult;
 import com.pc.wx.po.ParamsMap;
 import com.pc.wx.po.RemoteProtocol;
 import org.springframework.stereotype.Service;
