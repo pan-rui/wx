@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="jquery-3.1.1.min.js"></script>
+<script>
+    //            jsonpCallback:'call',
+/*
+    (function () {
+        $.ajax({
+            url: 'http://58.61.142.74:1000/wx/t1/1234500000',
+            data: JSON.stringify({"params": {"name": "panrui", "phone": "18098986696", "sex": 1, "time": 150000835734}}),
+            dataType: 'json',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var p = document.createElement('p');
+                p.innerHTML = JSON.stringify(data)
+                document.getElementsByTagName('body')[0].appendChild(p);
+            },
+            beforeSend: function (req) {
+                req.setRequestHeader('openId', '983t4o8');
+                req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            },
+            headers: {"openId": 'ssssssssssdddddd'},
+            error: function (req) {
+                alert(req.readyState);
+            }
+        })
+    })()
+*/
+
+    (function () {
+        $.ajax({
+            url: 'http://58.61.142.74:1000/bankcardinfo?cardNo=6227003320232234322',
+            dataType: 'json',
+            type: 'GET',
+            success: function (data) {
+                var p = document.createElement('p');
+                p.innerHTML = JSON.stringify(data)
+                document.getElementsByTagName('body')[0].appendChild(p);
+            },
+
+            error: function (req) {
+                alert(req.readyState);
+            }
+        })
+    })()
+
+    /*    (function () {
+            $.ajax({
+                url:'http://localhost:8080/wx/t1/1230000000',
+                dataType:'jsonp',
+                jsonpCallback:'call',
+                data:{params:{name:'ddd',sex:1,phone:'1310000000',time:153253456353}},
+                type:'POST',
+                success:function (data) {
+                    alert(data);
+                },
+                headers:{name:'abcdefgd'},
+                error:function (req) {
+                    alert(req.reqdyState);
+                }
+            })
+        })()*/
+</script>
+<!--<script type="text/javascript">
+    function call(data) {
+//        var size=document.getElementsByTagName("body")[0].childElementCount
+        var p=document.createElement("p");
+        p.innerHTML=JSON.stringify(data);
+        document.getElementsByTagName("body")[0].appendChild(p);
+    }
+   var script= document.createElement("script");
+   script.src="http://localhost:8080/wx/topic/13800001111?callback=call&time=150352363453"
+   script.setAttribute("type", "text/javascript");
+    document.getElementsByTagName("body")[0].appendChild(script);
+    document.getElementsByTagName("body")[0].appendChild(document.createElement("hr"))
+</script>-->
+Hello login
+</body>
+<script>
+    var data = {"params": {"name": "panrui", "phone": "18098986696", "sex": 1, "time": 150000835734}}
+    var dd = {
+        "code": 0,
+        "data": [{
+            "topic": "添加一条用户数据,包含name(String),phone(Long),sex(0 或1)，time(Long)，要求以POST方式请求，JSON格式传递数据(示例：{params:{name:xx,phone:xx,sex:xx,time:xx}})，并将成功后返回的data数据显示到页面上",
+            "url": "http://58.61.142.74:1000/wx/t1/你电话"
+        }, {
+            "topic": "修改刚才添加的那条数据，以id为条件，将time字段格式化成'yyyy-MM-dd HH:mm:ss'的形式，要求以PUT方式请求，JSON格式传递数据({params:{数据}})，并将成功后返回的data数据显示到页面上",
+            "url": "http://58.61.142.74:1000/wx/t2/你电话"
+        }, {
+            "topic": "删除刚才添加的那条数据，以id为条件，要求以DELETE方式请求，form表单传递数据，并将成功后返回的data数据显示到页面上",
+            "url": "http://58.61.142.74:1000/wx/t3/你电话"
+        }, {
+            "topic": "上传一张图片,并带上文件类型，图片字段为img,文件类型为fType,要求以POST方式请求，格式传递数据，并将成功后返回的l图片url打印到页面上",
+            "url": "http://58.61.142.74:1000/wx/t4/你电话"
+        }]
+    }
+    function dd() {
+        data = {};appendBank=[];
+        jQuery('ul.cashier-bank>li>a>span.icon').each((i, item) => {
+            var bankCode = $(item).attr('class').split(' ')[1]
+            data[bankCode] = item.innerHTML;
+        appendBank[appendBank.length] = {
+            bankName: item.innerHTML,
+            bankCode: bankCode,
+            patterns: [{reg: /^\w+/g, cardType: 'DC'}]
+        };
+    });
+        console.log(JSON.stringify(data));
+        console.log(appendBank);
+    }
+</script>
+</html>

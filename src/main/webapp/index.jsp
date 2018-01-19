@@ -6,7 +6,7 @@
 
 前端面试题：
 <hr/>
-摘要：所有请求head头部必须携带姓名name参数,string类型
+摘要：所有请求head头部必须携带姓名openId参数,string类型
 <br/>
 1.获取题目请求链接为：http://l-iot.cn/wx/topic/你的电话
 <br/>

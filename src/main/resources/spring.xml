@@ -20,11 +20,11 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd
     <util:properties id="config" location="classpath:config.properties"/>
     <!-- 自动扫描(自动注入) -->
     <!--<context:component-scan base-package="com.ygo" scoped-proxy="interfaces"/>-->
-    <context:component-scan base-package="com.pc.wx">
+    <context:component-scan base-package="com.hy.wx">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     <context:annotation-config/>
-    <bean id="wxBizMsgCrypt" class="com.pc.wx.aes.WxBizMsgCrypt" c:encodingAesKey="#{config['EncodingAESKey']}" c:appId="#{config['appId']}" c:token="#{config['token']}"/>
+    <bean id="wxBizMsgCrypt" class="com.hy.wx.aes.WxBizMsgCrypt" c:encodingAesKey="#{config['EncodingAESKey']}" c:appId="#{config['appId']}" c:token="#{config['token']}"/>
     <!--    <aop:config>
             <aop:aspect ref="logService">
                 <aop:pointcut id="logServicePointcuts"
@@ -33,6 +33,7 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd
             </aop:aspect>
         </aop:config>-->
     <aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true"/>
+    <bean id="asyncExceptionHandler" class="com.hy.wx.base.AsyncExceptionHandler"/>
     <task:annotation-driven exception-handler="asyncExceptionHandler" proxy-target-class="true" />
 
     <!--
@@ -67,5 +68,5 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd
     </bean>
 
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool" c:poolConfig-ref="jedisPoolConfig"
-          c:host="#{config['jedis.host']}" c:password="#{config['jedis.pwd']}" c:port="6379" c:timeout="15000"/>
+          c:host="#{config['jedis.host']}" c:password="#{config['jedis.pwd']}" c:port="#{config['jedis.port']}" c:timeout="15000"/>
 </beans>

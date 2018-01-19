@@ -82,21 +82,21 @@
         <Logger name="java.sql.ResultSet" level="debug" additivity="false">
             <appender-ref ref="Console"/>
         </Logger>
-        <Logger name="com.pc.wx.http" level="trace" additivity="false">
+        <Logger name="com.hy.wx.http" level="trace" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="INFO"/>
             <!--<AppenderRef ref="ApplicationLog"/>-->
             <!--<AppenderRef ref="Async"/>-->
         </Logger>
-        <Logger name="com.pc.service" level="debug" additivity="false">
+        <Logger name="com.hy.service" level="debug" additivity="false">
             <AppenderRef ref="INFO"/>
         </Logger>
-        <Logger name="com.pc.action" level="debug" additivity="false">
+        <Logger name="com.hy.action" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="INFO"/>
         </Logger>
-        <Logger name="com.pc.wx" additivity="false" level="TRACE">
-            <!--<AppenderRef ref="biz_debug"/>-->
+        <Logger name="com.hy.wx" additivity="false" level="TRACE">
+            <AppenderRef ref="biz_debug"/>
             <AppenderRef ref="INFO"/>
         </Logger>
         <!-- Root Logger -->
